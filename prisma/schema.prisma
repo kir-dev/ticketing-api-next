@@ -1,0 +1,30 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Ticket {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  phase       String @default("CREATED")
+  boardId     Int
+  board       Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+model Board {
+  id      Int      @id @default(autoincrement())
+  name    String
+  tickets Ticket[]
+
+  createdAt DateTime @default(now())
+}
