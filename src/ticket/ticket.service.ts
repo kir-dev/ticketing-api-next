@@ -1,13 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
-import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class TicketService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createTicketDto: Prisma.TicketCreateInput) {
+  create(createTicketDto: CreateTicketDto) {
     return this.prisma.ticket.create({ data: createTicketDto });
   }
 
@@ -23,7 +22,7 @@ export class TicketService {
     return ticket;
   }
 
-  update(id: number, updateTicketDto: Prisma.TicketUpdateInput) {
+  update(id: number, updateTicketDto: UpdateTicketDto) {
     return this.prisma.ticket.update({ where: { id }, data: updateTicketDto });
   }
 
