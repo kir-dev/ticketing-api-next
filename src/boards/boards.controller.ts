@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { BoardsService } from './boards.service';
+import { BoardDetails } from './dto/boardDetails.dto';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { Board } from './entities/board.entity';
@@ -30,7 +31,7 @@ export class BoardsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Board> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<BoardDetails> {
     return this.boardsService.findOne(id);
   }
 

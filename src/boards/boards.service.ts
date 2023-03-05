@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { BoardDetails } from './dto/boardDetails.dto';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
 
@@ -17,8 +18,11 @@ export class BoardsService {
     return this.prisma.board.findMany();
   }
 
-  async findOne(id: number) {
-    const board = await this.prisma.board.findUnique({ where: { id } });
+  async findOne(id: number): Promise<BoardDetails> {
+    const board = await this.prisma.board.findUnique({
+      where: { id },
+      include: { tickets: true },
+    });
     if (board === null) {
       throw new HttpException('A tábla nem található', HttpStatus.NOT_FOUND);
     }
