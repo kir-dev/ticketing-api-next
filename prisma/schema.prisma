@@ -17,6 +17,7 @@ model Ticket {
   phase       String @default("CREATED")
   boardId     Int
   board       Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  labels      Label[]
 
   createdAt DateTime @default(now())
 }
@@ -27,4 +28,12 @@ model Board {
   tickets Ticket[]
 
   createdAt DateTime @default(now())
+}
+
+model Label {
+  id Int @id @default(autoincrement())
+  name String
+  color String @default("blue")
+  createdAt DateTime @default(now())
+  tickets   Ticket[]
 }
