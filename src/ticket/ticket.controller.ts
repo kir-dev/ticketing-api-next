@@ -13,6 +13,7 @@ import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { ApiTags } from '@nestjs/swagger/dist';
 import { Ticket } from './entities/ticket.entity';
+import { TicketDetails } from './dto/ticketDetails.dto';
 
 @ApiTags('tickets')
 @Controller('tickets')
@@ -30,7 +31,7 @@ export class TicketController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Ticket> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<TicketDetails> {
     return this.ticketService.findOne(id);
   }
 
@@ -40,6 +41,22 @@ export class TicketController {
     @Body() updateTicketDto: UpdateTicketDto,
   ): Promise<Ticket> {
     return this.ticketService.update(id, updateTicketDto);
+  }
+
+  @Patch(':id/labels/:labelId')
+  addLabel(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('labelId', ParseIntPipe) labelId: number,
+  ): Promise<Ticket> {
+    return this.ticketService.addLabel(id, labelId);
+  }
+
+  @Delete(':id/labels/:labelId')
+  removeLabel(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('labelId', ParseIntPipe) labelId: number,
+  ): Promise<Ticket> {
+    return this.ticketService.removeLabel(id, labelId);
   }
 
   @Delete(':id')

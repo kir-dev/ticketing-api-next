@@ -12,7 +12,9 @@ import { LabelsService } from './labels.service';
 import { CreateLabelDto } from './dto/create-label.dto';
 import { UpdateLabelDto } from './dto/update-label.dto';
 import { Label } from './entities/label.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('labels')
 @Controller('labels')
 export class LabelsController {
   constructor(private readonly labelsService: LabelsService) {}

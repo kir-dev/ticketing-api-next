@@ -15,7 +15,10 @@ export class TicketService {
   }
 
   async findOne(id: number) {
-    const ticket = await this.prisma.ticket.findUnique({ where: { id } });
+    const ticket = await this.prisma.ticket.findUnique({
+      where: { id },
+      include: { labels: true },
+    });
     if (ticket === null) {
       throw new HttpException('A hibajegy nem található', HttpStatus.NOT_FOUND);
     }
@@ -24,6 +27,28 @@ export class TicketService {
 
   update(id: number, updateTicketDto: UpdateTicketDto) {
     return this.prisma.ticket.update({ where: { id }, data: updateTicketDto });
+  }
+
+  addLabel(id: number, labelId: number) {
+    try {
+      return this.prisma.ticket.update({
+        where: { id },
+        data: { labels: { connect: { id: labelId } } },
+      });
+    } catch {
+      throw new HttpException('Invalid aparameters', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  removeLabel(id: number, labelId: number) {
+    try {
+      return this.prisma.ticket.update({
+        where: { id },
+        data: { labels: { disconnect: { id: labelId } } },
+      });
+    } catch {
+      throw new HttpException('Invalid aparameters', HttpStatus.BAD_REQUEST);
+    }
   }
 
   remove(id: number) {
