@@ -1,18 +1,18 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
   ParseIntPipe,
-} from '@nestjs/common';
-import { LabelsService } from './labels.service';
-import { CreateLabelDto } from './dto/create-label.dto';
-import { UpdateLabelDto } from './dto/update-label.dto';
-import { Label } from './entities/label.entity';
-import { ApiTags } from '@nestjs/swagger';
+  Patch,
+  Post,
+} from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
+import { CreateLabelDto } from './dto/create-label.dto'
+import { UpdateLabelDto } from './dto/update-label.dto'
+import { Label } from './entities/label.entity'
+import { LabelsService } from './labels.service'
 
 @ApiTags('labels')
 @Controller('labels')
@@ -21,17 +21,17 @@ export class LabelsController {
 
   @Post()
   create(@Body() createLabelDto: CreateLabelDto): Promise<Label> {
-    return this.labelsService.create(createLabelDto);
+    return this.labelsService.create(createLabelDto)
   }
 
   @Get()
   findAll(): Promise<Label[]> {
-    return this.labelsService.findAll();
+    return this.labelsService.findAll()
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number): Promise<Label> {
-    return this.labelsService.findOne(id);
+    return this.labelsService.findOne(id)
   }
 
   @Patch(':id')
@@ -39,11 +39,11 @@ export class LabelsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateLabelDto: UpdateLabelDto,
   ): Promise<Label> {
-    return this.labelsService.update(id, updateLabelDto);
+    return this.labelsService.update(id, updateLabelDto)
   }
 
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number): Promise<Label> {
-    return this.labelsService.remove(id);
+    return this.labelsService.remove(id)
   }
 }

@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
-import { LabelsService } from './labels.service';
-import { LabelsController } from './labels.controller';
-import { PrismaModule } from 'src/prisma/prisma.module';
+import { Module } from '@nestjs/common'
+import { PrismaModule } from 'src/prisma/prisma.module'
+import { LabelsController } from './labels.controller'
+import { LabelsService } from './labels.service'
 
 @Module({
   controllers: [LabelsController],

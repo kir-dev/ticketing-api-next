@@ -1,19 +1,19 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
   ParseIntPipe,
-} from '@nestjs/common';
-import { TicketService } from './ticket.service';
-import { CreateTicketDto } from './dto/create-ticket.dto';
-import { UpdateTicketDto } from './dto/update-ticket.dto';
-import { ApiTags } from '@nestjs/swagger/dist';
-import { Ticket } from './entities/ticket.entity';
-import { TicketDetails } from './dto/ticketDetails.dto';
+  Patch,
+  Post,
+} from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger/dist'
+import { CreateTicketDto } from './dto/create-ticket.dto'
+import { TicketDetails } from './dto/ticketDetails.dto'
+import { UpdateTicketDto } from './dto/update-ticket.dto'
+import { Ticket } from './entities/ticket.entity'
+import { TicketService } from './ticket.service'
 
 @ApiTags('tickets')
 @Controller('tickets')
@@ -22,17 +22,17 @@ export class TicketController {
 
   @Post()
   create(@Body() createTicketDto: CreateTicketDto): Promise<Ticket> {
-    return this.ticketService.create(createTicketDto);
+    return this.ticketService.create(createTicketDto)
   }
 
   @Get()
   findAll(): Promise<Ticket[]> {
-    return this.ticketService.findAll();
+    return this.ticketService.findAll()
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number): Promise<TicketDetails> {
-    return this.ticketService.findOne(id);
+    return this.ticketService.findOne(id)
   }
 
   @Patch(':id')
@@ -40,7 +40,7 @@ export class TicketController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateTicketDto: UpdateTicketDto,
   ): Promise<Ticket> {
-    return this.ticketService.update(id, updateTicketDto);
+    return this.ticketService.update(id, updateTicketDto)
   }
 
   @Patch(':id/labels/:labelId')
@@ -48,7 +48,7 @@ export class TicketController {
     @Param('id', ParseIntPipe) id: number,
     @Param('labelId', ParseIntPipe) labelId: number,
   ): Promise<Ticket> {
-    return this.ticketService.addLabel(id, labelId);
+    return this.ticketService.addLabel(id, labelId)
   }
 
   @Delete(':id/labels/:labelId')
@@ -56,11 +56,11 @@ export class TicketController {
     @Param('id', ParseIntPipe) id: number,
     @Param('labelId', ParseIntPipe) labelId: number,
   ): Promise<Ticket> {
-    return this.ticketService.removeLabel(id, labelId);
+    return this.ticketService.removeLabel(id, labelId)
   }
 
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number): Promise<Ticket> {
-    return this.ticketService.remove(id);
+    return this.ticketService.remove(id)
   }
 }

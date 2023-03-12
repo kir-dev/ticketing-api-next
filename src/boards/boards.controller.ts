@@ -1,19 +1,19 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
   ParseIntPipe,
-} from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { BoardsService } from './boards.service';
-import { BoardDetails } from './dto/boardDetails.dto';
-import { CreateBoardDto } from './dto/create-board.dto';
-import { UpdateBoardDto } from './dto/update-board.dto';
-import { Board } from './entities/board.entity';
+  Patch,
+  Post,
+} from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
+import { BoardsService } from './boards.service'
+import { BoardDetails } from './dto/boardDetails.dto'
+import { CreateBoardDto } from './dto/create-board.dto'
+import { UpdateBoardDto } from './dto/update-board.dto'
+import { Board } from './entities/board.entity'
 
 @ApiTags('boards')
 @Controller('boards')
@@ -22,17 +22,17 @@ export class BoardsController {
 
   @Post()
   create(@Body() createBoardDto: CreateBoardDto): Promise<Board> {
-    return this.boardsService.create(createBoardDto);
+    return this.boardsService.create(createBoardDto)
   }
 
   @Get()
   findAll(): Promise<Board[]> {
-    return this.boardsService.findAll();
+    return this.boardsService.findAll()
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number): Promise<BoardDetails> {
-    return this.boardsService.findOne(id);
+    return this.boardsService.findOne(id)
   }
 
   @Patch(':id')
@@ -40,11 +40,11 @@ export class BoardsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateBoardDto: UpdateBoardDto,
   ): Promise<Board> {
-    return this.boardsService.update(id, updateBoardDto);
+    return this.boardsService.update(id, updateBoardDto)
   }
 
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number): Promise<Board> {
-    return this.boardsService.remove(id);
+    return this.boardsService.remove(id)
   }
 }
