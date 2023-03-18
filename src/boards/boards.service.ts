@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { BoardDetails } from './dto/boardDetails.dto'
 import { CreateBoardDto } from './dto/create-board.dto'
@@ -24,7 +24,7 @@ export class BoardsService {
       include: { tickets: true },
     })
     if (board === null) {
-      throw new HttpException('A tábla nem található', HttpStatus.NOT_FOUND)
+      throw new NotFoundException('A tábla nem található')
     }
     return board
   }

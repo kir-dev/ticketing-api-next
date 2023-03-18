@@ -1,4 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateTicketDto } from './dto/create-ticket.dto'
 import { UpdateTicketDto } from './dto/update-ticket.dto'
@@ -20,7 +24,7 @@ export class TicketService {
       include: { labels: true },
     })
     if (ticket === null) {
-      throw new HttpException('A hibajegy nem található', HttpStatus.NOT_FOUND)
+      throw new NotFoundException('A hibajegy nem található')
     }
     return ticket
   }
@@ -36,7 +40,7 @@ export class TicketService {
         data: { labels: { connect: { id: labelId } } },
       })
     } catch {
-      throw new HttpException('Invalid aparameters', HttpStatus.BAD_REQUEST)
+      throw new BadRequestException('Invalid aparameters')
     }
   }
 
@@ -47,7 +51,7 @@ export class TicketService {
         data: { labels: { disconnect: { id: labelId } } },
       })
     } catch {
-      throw new HttpException('Invalid aparameters', HttpStatus.BAD_REQUEST)
+      throw new BadRequestException('Invalid aparameters')
     }
   }
 
