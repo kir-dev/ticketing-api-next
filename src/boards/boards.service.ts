@@ -29,11 +29,22 @@ export class BoardsService {
     return board
   }
 
-  update(id: number, updateBoardDto: UpdateBoardDto) {
-    return this.prisma.board.update({ where: { id }, data: updateBoardDto })
+  async update(id: number, updateBoardDto: UpdateBoardDto) {
+    try {
+      return await this.prisma.board.update({
+        where: { id },
+        data: updateBoardDto,
+      })
+    } catch {
+      throw new NotFoundException('A tábla nem található!')
+    }
   }
 
-  remove(id: number) {
-    return this.prisma.board.delete({ where: { id } })
+  async remove(id: number) {
+    try {
+      return await this.prisma.board.delete({ where: { id } })
+    } catch {
+      throw new NotFoundException('A tábla nem található!')
+    }
   }
 }
