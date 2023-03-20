@@ -1,13 +1,12 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { CreateLabelDto } from './dto/create-label.dto'
-import { UpdateLabelDto } from './dto/update-label.dto'
 
 @Injectable()
 export class LabelsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(createLabelDto: CreateLabelDto) {
+  create(createLabelDto: Prisma.LabelUncheckedCreateInput) {
     return this.prisma.label.create({ data: createLabelDto })
   }
 
@@ -15,11 +14,15 @@ export class LabelsService {
     return this.prisma.label.findMany({})
   }
 
-  findOne(id: number) {
-    return this.prisma.label.findUnique({ where: { id } })
+  async findOne(id: number) {
+    const label = this.prisma.label.findUnique({ where: { id } })
+    if (label === null) {
+      throw new NotFoundException('Címke nem található!')
+    }
+    return label
   }
 
-  update(id: number, updateLabelDto: UpdateLabelDto) {
+  update(id: number, updateLabelDto: Prisma.LabelUncheckedUpdateInput) {
     return this.prisma.label.update({ where: { id }, data: updateLabelDto })
   }
 

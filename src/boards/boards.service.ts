@@ -1,14 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { BoardDetails } from './dto/boardDetails.dto'
-import { CreateBoardDto } from './dto/create-board.dto'
-import { UpdateBoardDto } from './dto/update-board.dto'
 
 @Injectable()
 export class BoardsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(createBoardDto: CreateBoardDto) {
+  create(createBoardDto: Prisma.BoardUncheckedCreateInput) {
     return this.prisma.board.create({
       data: createBoardDto,
     })
@@ -29,7 +28,7 @@ export class BoardsService {
     return board
   }
 
-  update(id: number, updateBoardDto: UpdateBoardDto) {
+  update(id: number, updateBoardDto: Prisma.BoardUncheckedUpdateInput) {
     return this.prisma.board.update({ where: { id }, data: updateBoardDto })
   }
 

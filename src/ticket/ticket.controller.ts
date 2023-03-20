@@ -4,14 +4,12 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger/dist'
-import { CreateTicketDto } from './dto/create-ticket.dto'
+import { Prisma } from '@prisma/client'
 import { TicketDetails } from './dto/ticketDetails.dto'
-import { UpdateTicketDto } from './dto/update-ticket.dto'
 import { Ticket } from './entities/ticket.entity'
 import { TicketService } from './ticket.service'
 
@@ -21,7 +19,9 @@ export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 
   @Post()
-  create(@Body() createTicketDto: CreateTicketDto): Promise<Ticket> {
+  create(
+    @Body() createTicketDto: Prisma.TicketUncheckedCreateInput,
+  ): Promise<Ticket> {
     return this.ticketService.create(createTicketDto)
   }
 
@@ -31,36 +31,36 @@ export class TicketController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<TicketDetails> {
-    return this.ticketService.findOne(id)
+  findOne(@Param('id') id: string): Promise<TicketDetails> {
+    return this.ticketService.findOne(+id)
   }
 
   @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateTicketDto: UpdateTicketDto,
+    @Param('id') id: string,
+    @Body() updateTicketDto: Prisma.TicketUncheckedUpdateInput,
   ): Promise<Ticket> {
-    return this.ticketService.update(id, updateTicketDto)
+    return this.ticketService.update(+id, updateTicketDto)
   }
 
   @Patch(':id/labels/:labelId')
   addLabel(
-    @Param('id', ParseIntPipe) id: number,
-    @Param('labelId', ParseIntPipe) labelId: number,
+    @Param('id') id: string,
+    @Param('labelId') labelId: string,
   ): Promise<Ticket> {
-    return this.ticketService.addLabel(id, labelId)
+    return this.ticketService.addLabel(+id, +labelId)
   }
 
   @Delete(':id/labels/:labelId')
   removeLabel(
-    @Param('id', ParseIntPipe) id: number,
-    @Param('labelId', ParseIntPipe) labelId: number,
+    @Param('id') id: string,
+    @Param('labelId') labelId: string,
   ): Promise<Ticket> {
-    return this.ticketService.removeLabel(id, labelId)
+    return this.ticketService.removeLabel(+id, +labelId)
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number): Promise<Ticket> {
-    return this.ticketService.remove(id)
+  remove(@Param('id') id: string): Promise<Ticket> {
+    return this.ticketService.remove(+id)
   }
 }

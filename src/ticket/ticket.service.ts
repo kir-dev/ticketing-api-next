@@ -1,16 +1,11 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { CreateTicketDto } from './dto/create-ticket.dto'
-import { UpdateTicketDto } from './dto/update-ticket.dto'
 
 @Injectable()
 export class TicketService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createTicketDto: CreateTicketDto) {
+  create(createTicketDto: Prisma.TicketUncheckedCreateInput) {
     return this.prisma.ticket.create({ data: createTicketDto })
   }
 
@@ -29,30 +24,22 @@ export class TicketService {
     return ticket
   }
 
-  update(id: number, updateTicketDto: UpdateTicketDto) {
+  update(id: number, updateTicketDto: Prisma.TicketUncheckedUpdateInput) {
     return this.prisma.ticket.update({ where: { id }, data: updateTicketDto })
   }
 
   addLabel(id: number, labelId: number) {
-    try {
-      return this.prisma.ticket.update({
-        where: { id },
-        data: { labels: { connect: { id: labelId } } },
-      })
-    } catch {
-      throw new BadRequestException('Invalid aparameters')
-    }
+    return this.prisma.ticket.update({
+      where: { id },
+      data: { labels: { connect: { id: labelId } } },
+    })
   }
 
   removeLabel(id: number, labelId: number) {
-    try {
-      return this.prisma.ticket.update({
-        where: { id },
-        data: { labels: { disconnect: { id: labelId } } },
-      })
-    } catch {
-      throw new BadRequestException('Invalid aparameters')
-    }
+    return this.prisma.ticket.update({
+      where: { id },
+      data: { labels: { disconnect: { id: labelId } } },
+    })
   }
 
   remove(id: number) {
