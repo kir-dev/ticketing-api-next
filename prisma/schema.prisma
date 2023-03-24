@@ -7,17 +7,16 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./dev.db"
 }
 
 model Ticket {
-  id          Int     @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   name        String
   description String
-  phase       String  @default("CREATED")
+  phase       String @default("CREATED")
   boardId     Int
-  board       Board   @relation(fields: [boardId], references: [id], onDelete: Cascade)
-  labels      Label[]
+  board       Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }
@@ -28,12 +27,4 @@ model Board {
   tickets Ticket[]
 
   createdAt DateTime @default(now())
-}
-
-model Label {
-  id        Int      @id @default(autoincrement())
-  name      String
-  color     String   @default("blue")
-  createdAt DateTime @default(now())
-  tickets   Ticket[]
 }

@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { Prisma } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
+import { CreateTicketDto } from './dto/create-ticket.dto'
+import { UpdateTicketDto } from './dto/update-ticket.dto'
 
 @Injectable()
 export class TicketService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createTicketDto: Prisma.TicketUncheckedCreateInput) {
-    return this.prisma.ticket.create({ data: createTicketDto })
+  create(createTicketDto: CreateTicketDto) {
+    return 'Create ticket'
   }
 
   findAll() {
@@ -16,7 +17,6 @@ export class TicketService {
   async findOne(id: number) {
     const ticket = await this.prisma.ticket.findUnique({
       where: { id },
-      include: { labels: true },
     })
     if (ticket === null) {
       throw new NotFoundException('A hibajegy nem található')
@@ -24,25 +24,11 @@ export class TicketService {
     return ticket
   }
 
-  update(id: number, updateTicketDto: Prisma.TicketUncheckedUpdateInput) {
-    return this.prisma.ticket.update({ where: { id }, data: updateTicketDto })
-  }
-
-  addLabel(id: number, labelId: number) {
-    return this.prisma.ticket.update({
-      where: { id },
-      data: { labels: { connect: { id: labelId } } },
-    })
-  }
-
-  removeLabel(id: number, labelId: number) {
-    return this.prisma.ticket.update({
-      where: { id },
-      data: { labels: { disconnect: { id: labelId } } },
-    })
+  update(id: number, updateTicketDto: UpdateTicketDto) {
+    return 'Update ticket'
   }
 
   remove(id: number) {
-    return this.prisma.ticket.delete({ where: { id } })
+    return 'Delete ticket'
   }
 }

@@ -1,9 +1,4 @@
-import { OmitType, PartialType } from '@nestjs/swagger'
-import { IsInt, Min } from 'class-validator'
-import { Ticket } from '../entities/ticket.entity'
+import { PartialType } from '@nestjs/swagger'
+import { CreateTicketDto } from './create-ticket.dto'
 
-export class UpdateTicketDto extends PartialType(OmitType(Ticket, ['id'])) {
-  @IsInt()
-  @Min(1)
-  boardId: number
-}
+export class UpdateTicketDto extends PartialType(CreateTicketDto) {}
