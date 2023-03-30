@@ -11,14 +11,14 @@ datasource db {
 }
 
 model Ticket {
-  id          Int    @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
   description String
-  phase       String @default("CREATED")
+  phase       String   @default("CREATED")
   boardId     Int
-  board       Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
+  board       Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  labels      Label[]
+  createdAt   DateTime @default(now())
 }
 
 model Board {
@@ -27,4 +27,11 @@ model Board {
   tickets Ticket[]
 
   createdAt DateTime @default(now())
+}
+
+model Label {
+  id      Int      @id @default(autoincrement())
+  name    String
+  color   String
+  tickets Ticket[]
 }

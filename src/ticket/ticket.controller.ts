@@ -5,10 +5,9 @@ import {
   Get,
   Param,
   Patch,
-  Post,
+  Post
 } from '@nestjs/common'
-import { CreateTicketDto } from './dto/create-ticket.dto'
-import { UpdateTicketDto } from './dto/update-ticket.dto'
+import { Prisma } from '@prisma/client'
 import { TicketService } from './ticket.service'
 
 @Controller('tickets')
@@ -16,8 +15,21 @@ export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 
   @Post()
-  create(@Body() createTicketDto: CreateTicketDto) {
+  create(@Body() createTicketDto: Prisma.TicketUncheckedCreateInput) {
     return this.ticketService.create(createTicketDto)
+  }
+
+  @Post(':id/addLabel/:labelId')
+  addLabel(@Param('id') ticketId: string, @Param('labelId') labelId: string) {
+    return this.ticketService.addLabel(+ticketId, +labelId)
+  }
+
+  @Post(':id/removeLabel/:labelId')
+  removeLabel(
+    @Param('id') ticketId: string,
+    @Param('labelId') labelId: string,
+  ) {
+    return this.ticketService.removeLabel(+ticketId, +labelId)
   }
 
   @Get()
@@ -31,7 +43,10 @@ export class TicketController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTicketDto: UpdateTicketDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateTicketDto: Prisma.TicketUncheckedUpdateInput,
+  ) {
     return this.ticketService.update(+id, updateTicketDto)
   }
 
