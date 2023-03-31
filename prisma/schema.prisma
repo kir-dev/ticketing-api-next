@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
 model Ticket {
@@ -30,8 +30,9 @@ model Board {
 }
 
 model Label {
-  id      Int      @id @default(autoincrement())
-  name    String
-  color   String
-  tickets Ticket[]
+  id        Int      @id @default(autoincrement())
+  name      String
+  color     String
+  tickets   Ticket[]
+  createdAt DateTime @default(now())
 }

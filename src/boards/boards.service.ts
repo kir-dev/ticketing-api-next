@@ -1,12 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { Prisma } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
+import { BoardDetails } from './dto/boardDetails.dto'
+import { CreateBoardDto } from './dto/create-board.dto'
+import { UpdateBoardDto } from './dto/update-board.dto'
 
 @Injectable()
 export class BoardsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(createBoardDto: Prisma.BoardCreateInput) {
+  create(createBoardDto: CreateBoardDto) {
     return this.prisma.board.create({
       data: createBoardDto,
     })
@@ -16,7 +18,7 @@ export class BoardsService {
     return this.prisma.board.findMany()
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<BoardDetails> {
     const board = await this.prisma.board.findUnique({
       where: { id },
       include: { tickets: true },
@@ -27,11 +29,22 @@ export class BoardsService {
     return board
   }
 
-  update(id: number, updateBoardDto: Prisma.BoardUpdateInput) {
-    return this.prisma.board.update({ where: { id }, data: updateBoardDto })
+  async update(id: number, updateBoardDto: UpdateBoardDto) {
+    try {
+      return await this.prisma.board.update({
+        where: { id },
+        data: updateBoardDto,
+      })
+    } catch {
+      throw new NotFoundException('A tábla nem található!')
+    }
   }
 
-  remove(id: number) {
-    return this.prisma.board.delete({ where: { id } })
+  async remove(id: number) {
+    try {
+      return await this.prisma.board.delete({ where: { id } })
+    } catch {
+      throw new NotFoundException('A tábla nem található!')
+    }
   }
 }

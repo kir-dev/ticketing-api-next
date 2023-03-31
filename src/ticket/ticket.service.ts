@@ -1,20 +1,22 @@
 import {
   BadRequestException,
   Injectable,
-  NotFoundException
+  NotFoundException,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
+import { CreateTicketDto } from './dto/create-ticket.dto'
+import { UpdateTicketDto } from './dto/update-ticket.dto'
 
 @Injectable()
 export class TicketService {
   constructor(private readonly prisma: PrismaService) {}
-  async create(createTicketDto: Prisma.TicketUncheckedCreateInput) {
+
+  async create(createTicketDto: CreateTicketDto) {
     try {
       return await this.prisma.ticket.create({ data: createTicketDto })
-    } catch (e) {
-      console.log(e)
-      throw new BadRequestException('hibas request')
+    } catch {
+      throw new BadRequestException('Érvénytelen tábla azonosító!')
     }
   }
 
@@ -33,25 +35,51 @@ export class TicketService {
     return ticket
   }
 
-  update(id: number, updateTicketDto: Prisma.TicketUncheckedUpdateInput) {
-    return this.prisma.ticket.update({ where: { id }, data: updateTicketDto })
+  async update(id: number, updateTicketDto: UpdateTicketDto) {
+    try {
+      return await this.prisma.ticket.update({
+        where: { id },
+        data: updateTicketDto,
+      })
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2003') {
+          throw new BadRequestException('Érvénytelen tábla azonosító!')
+        }
+        if (e.code === 'P2025') {
+          throw new NotFoundException('A hibajegy nem található')
+        }
+      }
+    }
   }
 
-  remove(id: number) {
-    return this.prisma.ticket.delete({ where: { id } })
+  async addLabel(id: number, labelId: number) {
+    try {
+      return await this.prisma.ticket.update({
+        where: { id },
+        data: { labels: { connect: { id: labelId } } },
+      })
+    } catch {
+      throw new BadRequestException('Érvénytelen paraméterek!')
+    }
   }
 
-  addLabel(id: number, labelId: number) {
-    return this.prisma.ticket.update({
-      where: { id },
-      data: { labels: { connect: { id: labelId } } },
-    })
+  async removeLabel(id: number, labelId: number) {
+    try {
+      return await this.prisma.ticket.update({
+        where: { id },
+        data: { labels: { disconnect: { id: labelId } } },
+      })
+    } catch {
+      throw new BadRequestException('Érvénytelen paraméterek!')
+    }
   }
 
-  removeLabel(id: number, labelId: number) {
-    return this.prisma.ticket.update({
-      where: { id },
-      data: { labels: { disconnect: { id: labelId } } },
-    })
+  async remove(id: number) {
+    try {
+      return await this.prisma.ticket.delete({ where: { id } })
+    } catch {
+      throw new NotFoundException('A hibajegy nem található')
+    }
   }
 }
